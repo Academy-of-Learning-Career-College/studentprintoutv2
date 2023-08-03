@@ -1,0 +1,20 @@
+{
+  "name": "studentprintoutv2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx parcel src/index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/optimizer-terser": "^2.9.3",
+    "parcel": "^2.9.3"
+  },
+  "dependencies": {
+    "parcel-reporter-static-files-copy": "^1.5.2",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^3.9.179"
+  }
+}

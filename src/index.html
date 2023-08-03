@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+ <head>
+   <meta charset="utf-8"/>
+
+   <title>Yo</title>
+ </head>
+ <body>
+   <div id="viewerContainer"></div>
+   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+   <script>
+       async function flattenForm() {
+
+ const formUrl = '/PrintoutTemplate_Form.pdf'
+ const formPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer())
+
+ const pdfDoc = await window.PDFLib.PDFDocument.load(formPdfBytes)
+
+ const form = pdfDoc.getForm()
+ var qS = [
+           { "field": "FirstName", "v" : "John"},
+           { "field": "LastName", "v" : "Doe"},
+           { "field": "Password", "v" : "FunkyBanana123"},
+         ]
+   qS.push({"field":"ssp","v":qS[0].v+"."+qS[1].v})
+
+ const fieldValues = [
+           { "field": "FirstName", "value" : qS[0].v},
+           { "field": "Password1", "value" : qS[2].v+"!"},
+           { "field": "password2", "value" : qS[2].v},
+           { "field": "password3", "value" : qS[2].v},
+           { "field": "password4", "value" : qS[2].v},
+           { "field": "campusemail", "value" : qS[3].v+"@aolccbc.com"},
+           // { "field": "headofficeemail", "value" : qS[3].v+"@my-aolcc.com"},
+           { "field": "ssp", "value" : qS[3].v},
+           { "field": "tt", "value" : qS[3].v},
+ ]
+         // fieldValues.push({"field":"campusemail","value":fieldValues[3].value+"@aolccbc.com"})
+         // fieldValues.push({"field":"hoemail","value":fieldValues[3].value+"@my-aolcc.com"})
+         // fieldValues.push({"field":"Password1","value":fieldValues[2].value+"!"})
+
+
+         fieldValues.forEach(item => {
+           if (item.field !== "LastName") {
+           form.getTextField(item.field).setText(item.value);}
+         }
+           )
+         form.flatten();
+
+ const pdfBytes = await pdfDoc.save()
+//  console.log(pdfBytes)
+ const blob = new Blob([pdfBytes], {type: "application/pdf"})
+ const pdfURL = URL.createObjectURL(blob)
+ window.location = pdfURL;
+// console.log(qS);
+}
+flattenForm()
+   </script>
+ </body>
+</html>
