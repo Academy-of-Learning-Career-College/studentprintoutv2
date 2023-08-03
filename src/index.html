@@ -2,8 +2,9 @@
 <html lang="en">
  <head>
    <meta charset="utf-8"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-   <title>Yo</title>
+   <title>Password Sheet</title>
  </head>
  <body>
    <div id="viewerContainer"></div>
@@ -14,16 +15,19 @@
 
  const formUrl = '/PrintoutTemplate_Form.pdf'
  const formPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer())
+ const qP = new URLSearchParams(window.location.search) || "Yolo"
+  //?FirstName=Joseph&LastName=Smyth&studentpassword=Joseph89285&personalemail=joseph.smyth@bcehs.ca
 
  const pdfDoc = await window.PDFLib.PDFDocument.load(formPdfBytes)
 
  const form = pdfDoc.getForm()
  var qS = [
-           { "field": "FirstName", "v" : "John"},
-           { "field": "LastName", "v" : "Doe"},
-           { "field": "Password", "v" : "FunkyBanana123"},
+           { "v" : qP.get("FirstName") || "John"}, // First Name ?FirstName
+           { "v" : qP.get("LastName") || "Doe"}, // Last Name ?LastName
+           { "v" : qP.get("studentpassword") || "John888123"}, //Contract ?
          ]
-   qS.push({"field":"ssp","v":qS[0].v+"."+qS[1].v})
+   qS.push({"v":qS[0].v+"."+qS[1].v})
+   console.log(qS);
 
  const fieldValues = [
            { "field": "FirstName", "value" : qS[0].v},
@@ -52,7 +56,10 @@
 //  console.log(pdfBytes)
  const blob = new Blob([pdfBytes], {type: "application/pdf"})
  const pdfURL = URL.createObjectURL(blob)
- window.location = pdfURL;
+ const link = document.createElement('a');
+ link.href = pdfURL;
+ link.download = `${qS[0].v} ${qS[1].v} Password Sheet.pdf`;
+ link.click();
 // console.log(qS);
 }
 flattenForm()
